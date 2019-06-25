@@ -188,7 +188,7 @@ class SelectSearch extends React.PureComponent {
         this.setState({ focus: true, options: this.state.defaultOptions, search: '' });
     };
 
-    onChange = (e) => {
+    onChange = async (e) => {
         const { async, onSearchChange } = this.props;
         let { value } = e.target;
 
@@ -198,6 +198,10 @@ class SelectSearch extends React.PureComponent {
 
         let options = this.state.defaultOptions;
         const getNewOptionsList = onSearchChange || this.getNewOptionsList;
+        console.log('test on change');
+        console.log(onSearchChange);
+        console.log(getNewOptionsList);
+        console.log(async);
         if (async) {
             this.setState({
                 loading: true,
@@ -679,6 +683,7 @@ class SelectSearch extends React.PureComponent {
     }
 
     render() {
+        console.log('test render');
         const className = (this.state.focus) ? this.classes.focus : this.classes.container;
 
         return (
