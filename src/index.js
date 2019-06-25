@@ -188,29 +188,30 @@ class SelectSearch extends React.PureComponent {
         this.setState({ focus: true, options: this.state.defaultOptions, search: '' });
     };
 
-    onChange = (e) => {
+    onChange = async (e) => {
         const { async, onSearchChange } = this.props;
         let { value } = e.target;
 
         if (!value) {
             value = '';
         }
+        this.setState({ search: value });
 
         let options = this.state.defaultOptions;
         const getNewOptionsList = onSearchChange || this.getNewOptionsList;
         if (async) {
             this.setState({
                 loading: true,
-            })
-            options = await getNewOptionsList(options, value); 
+            });
+            options = await getNewOptionsList(options, value);
             this.setState({
                 loading: false,
-            })
+            });
         } else {
             options = getNewOptionsList(options, value);
         }
 
-        this.setState({ search: value, options });
+        this.setState({ options });
     };
 
     onKeyPress = (e) => {
@@ -522,7 +523,7 @@ class SelectSearch extends React.PureComponent {
         const selectStyle = {};
         const options = [];
         const { multiple } = this.props;
-        const { value: stateValue, options: foundOptions } = this.state;
+        const { loading, value: stateValue, options: foundOptions } = this.state;
 
         if (foundOptions && foundOptions.length > 0) {
             const groupedOptions = GroupOptions(foundOptions);
@@ -552,7 +553,7 @@ class SelectSearch extends React.PureComponent {
                         options.push(this.renderOption(option, stateValue, multiple));
                     }
                 });
-                
+
                 if (loading) {
                     select = (
                         <ul ref={this.selectOptions} className={this.classes.options}>
@@ -561,8 +562,7 @@ class SelectSearch extends React.PureComponent {
                             </li>
                         </ul>
                     );
-                }
-                else if (options.length > 0) {
+                } else if (options.length > 0) {
                     select = (
                         <ul ref={this.selectOptions} className={this.classes.options}>
                             {options}
