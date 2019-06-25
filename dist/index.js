@@ -9,6 +9,8 @@ var _react = _interopRequireDefault(require("react"));
 
 var _fuse = _interopRequireDefault(require("fuse.js"));
 
+var _reactSvgSpinner = _interopRequireDefault(require("react-svg-spinner"));
+
 var _reactOnclickoutside = _interopRequireDefault(require("react-onclickoutside"));
 
 var _Bem = _interopRequireDefault(require("./Bem"));
@@ -20,6 +22,10 @@ var _GroupOptions = _interopRequireDefault(require("./GroupOptions"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -41,8 +47,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 var SelectSearch =
 /*#__PURE__*/
-function (_React$Component) {
-  _inherits(SelectSearch, _React$Component);
+function (_React$PureComponent) {
+  _inherits(SelectSearch, _React$PureComponent);
 
   /**
    * Component setup
@@ -88,21 +94,74 @@ function (_React$Component) {
       });
     });
 
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "onChange", function (e) {
-      var value = e.target.value;
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "onChange",
+    /*#__PURE__*/
+    function () {
+      var _ref = _asyncToGenerator(
+      /*#__PURE__*/
+      regeneratorRuntime.mark(function _callee(e) {
+        var _this$props, async, onSearchChange, value, options, getNewOptionsList;
 
-      if (!value) {
-        value = '';
-      }
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _this$props = _this.props, async = _this$props.async, onSearchChange = _this$props.onSearchChange;
+                value = e.target.value;
 
-      var options = _this.state.defaultOptions;
-      options = _this.getNewOptionsList(options, value);
+                if (!value) {
+                  value = '';
+                }
 
-      _this.setState({
-        search: value,
-        options: options
-      });
-    });
+                _this.setState({
+                  search: value
+                });
+
+                options = _this.state.defaultOptions;
+                getNewOptionsList = onSearchChange || _this.getNewOptionsList;
+
+                if (!async) {
+                  _context.next = 14;
+                  break;
+                }
+
+                _this.setState({
+                  loading: true
+                });
+
+                _context.next = 10;
+                return getNewOptionsList(options, value);
+
+              case 10:
+                options = _context.sent;
+
+                _this.setState({
+                  loading: false
+                });
+
+                _context.next = 15;
+                break;
+
+              case 14:
+                options = getNewOptionsList(options, value);
+
+              case 15:
+                _this.setState({
+                  options: options
+                });
+
+              case 16:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, this);
+      }));
+
+      return function (_x) {
+        return _ref.apply(this, arguments);
+      };
+    }());
 
     _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "onKeyPress", function (e) {
       if (!_this.state.options || _this.state.options.length < 1) {
@@ -159,7 +218,8 @@ function (_React$Component) {
 
     var _options = props.options,
         _value = props.value,
-        multiple = props.multiple;
+        multiple = props.multiple,
+        className = props.className;
     var stateValue = !_value && multiple ? [] : _value;
     var flattenedOptions = (0, _FlattenOptions.default)(_options);
     var _search = '';
@@ -173,6 +233,7 @@ function (_React$Component) {
     }
 
     _this.state = {
+      loading: false,
       search: _search,
       value: stateValue,
       defaultOptions: flattenedOptions,
@@ -181,20 +242,29 @@ function (_React$Component) {
       focus: false
     };
     _this.classes = {
-      container: _this.props.multiple ? "".concat(_this.props.className, " ").concat(_Bem.default.m(_this.props.className, 'multiple')) : _this.props.className,
-      search: _Bem.default.e(_this.props.className, 'search'),
-      select: _Bem.default.e(_this.props.className, 'select'),
-      options: _Bem.default.e(_this.props.className, 'options'),
-      option: _Bem.default.e(_this.props.className, 'option'),
-      row: _Bem.default.e(_this.props.className, 'row'),
-      group: _Bem.default.e(_this.props.className, 'group'),
-      groupHeader: _Bem.default.e(_this.props.className, 'group-header'),
-      out: _Bem.default.e(_this.props.className, 'out'),
-      label: _Bem.default.e(_this.props.className, 'label'),
-      focus: _this.props.multiple ? "".concat(_this.props.className, " ").concat(_Bem.default.m(_this.props.className, 'multiple focus')) : "".concat(_this.props.className, " ").concat(_Bem.default.m(_this.props.className, 'focus'))
+      container: multiple ? "".concat(className, " ").concat(_Bem.default.m(className, 'multiple')) : className,
+      search: _Bem.default.e(className, 'search'),
+      select: _Bem.default.e(className, 'select'),
+      options: _Bem.default.e(className, 'options'),
+      option: _Bem.default.e(className, 'option'),
+      row: _Bem.default.e(className, 'row'),
+      group: _Bem.default.e(className, 'group'),
+      groupHeader: _Bem.default.e(className, 'group-header'),
+      out: _Bem.default.e(className, 'out'),
+      label: _Bem.default.e(className, 'label'),
+      focus: multiple ? "".concat(className, " ").concat(_Bem.default.m(className, 'multiple focus')) : "".concat(className, " ").concat(_Bem.default.m(className, 'focus'))
     };
-    _this.classes.focus += " ".concat(_Bem.default.m(_this.props.className, 'select'));
-    _this.classes.container += " ".concat(_Bem.default.m(_this.props.className, 'select'));
+
+    if (multiple && !_this.props.search) {
+      _this.classes.container += " ".concat(_Bem.default.m(_Bem.default.e(className, 'icon'), 'disabled'));
+    }
+
+    if (!_this.props.search) {
+      _this.classes.focus += " ".concat(_Bem.default.m(_Bem.default.e(className, 'icon'), 'disabled'));
+    }
+
+    _this.classes.container += " ".concat(_Bem.default.m(className, 'select'));
+    _this.classes.focus += " ".concat(_Bem.default.m(className, 'select'));
     _this.container = _react.default.createRef();
     _this.selectOptions = _react.default.createRef();
     _this.select = _react.default.createRef();
@@ -413,7 +483,7 @@ function (_React$Component) {
     value: function chooseOption(value) {
       var _this3 = this;
 
-      var currentValue = this.state.value;
+      var currentValue = this.state.value.slice();
       var option;
       var search;
 
@@ -434,7 +504,8 @@ function (_React$Component) {
           currentValue = [];
         }
 
-        currentValue.push(option.value);
+        var currentIndex = currentValue.indexOf(option.value);
+        currentIndex > -1 ? currentValue.splice(currentIndex, 1) : currentValue.push(option.value);
         search = '';
       } else {
         currentValue = option.value;
@@ -470,7 +541,7 @@ function (_React$Component) {
       }
 
       var option = this.findByValue(this.state.defaultOptions, value);
-      var optionValue = this.state.value;
+      var optionValue = this.state.value.slice();
 
       if (!option || optionValue.indexOf(option.value) < 0) {
         return false;
@@ -592,6 +663,7 @@ function (_React$Component) {
       var options = [];
       var multiple = this.props.multiple;
       var _this$state2 = this.state,
+          loading = _this$state2.loading,
           stateValue = _this$state2.value,
           foundOptions = _this$state2.options;
 
@@ -620,7 +692,14 @@ function (_React$Component) {
             }
           });
 
-          if (options.length > 0) {
+          if (loading) {
+            select = _react.default.createElement("ul", {
+              ref: this.selectOptions,
+              className: this.classes.options
+            }, _react.default.createElement("li", {
+              className: this.classes.row
+            }, _react.default.createElement(_reactSvgSpinner.default, null)));
+          } else if (options.length > 0) {
             select = _react.default.createElement("ul", {
               ref: this.selectOptions,
               className: this.classes.options
@@ -654,7 +733,7 @@ function (_React$Component) {
       var outElement;
 
       if (this.props.multiple) {
-        if (this.state.value) {
+        if (Object.prototype.toString.call(this.state.value) == '[object Array]' && this.state.value.length) {
           var finalValueOptions = [];
           this.state.value.forEach(function (value) {
             option = _this7.findByValue(_this7.state.defaultOptions, value);
@@ -724,6 +803,10 @@ function (_React$Component) {
           placeholder: this.props.placeholder
         });
       } else {
+        if (this.props.multiple) {
+          return;
+        }
+
         var option;
         var labelValue;
         var labelClassName;
@@ -764,7 +847,7 @@ function (_React$Component) {
   }]);
 
   return SelectSearch;
-}(_react.default.Component);
+}(_react.default.PureComponent);
 
 _defineProperty(SelectSearch, "defaultProps", {
   className: 'select-search-box',
