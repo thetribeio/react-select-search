@@ -38,6 +38,8 @@ class SelectSearch extends React.PureComponent {
     constructor(props) {
         super(props);
 
+        this.getNewOptionsList = this.getNewOptionsList.bind(this);
+
         const { options, value, multiple, className } = props;
         const stateValue = (!value && multiple) ? [] : value;
         const flattenedOptions = FlattenOptions(options);
@@ -102,32 +104,6 @@ class SelectSearch extends React.PureComponent {
         if (this.search.current && this.props.autofocus === true) {
             this.search.current.focus();
         }
-    }
-
-    componentWillReceiveProps(nextProps) {
-        const nextState = {};
-        const { defaultOptions, value } = this.state;
-
-        if (nextProps.options !== defaultOptions) {
-            const flattenedOptions = FlattenOptions(nextProps.options);
-
-            nextState.options = flattenedOptions;
-            nextState.defaultOptions = flattenedOptions;
-        }
-
-        if (nextProps.value !== value) {
-            const option = this.findByValue(defaultOptions, nextProps.value);
-
-            if (option) {
-                nextState.value = nextProps.value;
-                nextState.search = option.name;
-            } else {
-                nextState.value = [];
-                nextState.search = '';
-            }
-        }
-
-        //this.setState(nextState);
     }
 
     componentDidUpdate(prevProps, prevState) {

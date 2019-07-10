@@ -218,6 +218,7 @@ function (_React$PureComponent) {
       }
     });
 
+    _this.getNewOptionsList = _this.getNewOptionsList.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     var _options = props.options,
         _value = props.value,
         multiple = props.multiple,
@@ -288,33 +289,6 @@ function (_React$PureComponent) {
       if (this.search.current && this.props.autofocus === true) {
         this.search.current.focus();
       }
-    }
-  }, {
-    key: "componentWillReceiveProps",
-    value: function componentWillReceiveProps(nextProps) {
-      var nextState = {};
-      var _this$state = this.state,
-          defaultOptions = _this$state.defaultOptions,
-          value = _this$state.value;
-
-      if (nextProps.options !== defaultOptions) {
-        var flattenedOptions = (0, _FlattenOptions.default)(nextProps.options);
-        nextState.options = flattenedOptions;
-        nextState.defaultOptions = flattenedOptions;
-      }
-
-      if (nextProps.value !== value) {
-        var option = this.findByValue(defaultOptions, nextProps.value);
-
-        if (option) {
-          nextState.value = nextProps.value;
-          nextState.search = option.name;
-        } else {
-          nextState.value = [];
-          nextState.search = '';
-        }
-      } //this.setState(nextState);
-
     }
   }, {
     key: "componentDidUpdate",
@@ -663,10 +637,10 @@ function (_React$PureComponent) {
       var selectStyle = {};
       var options = [];
       var multiple = this.props.multiple;
-      var _this$state2 = this.state,
-          loading = _this$state2.loading,
-          stateValue = _this$state2.value,
-          foundOptions = _this$state2.options;
+      var _this$state = this.state,
+          loading = _this$state.loading,
+          stateValue = _this$state.value,
+          foundOptions = _this$state.options;
 
       if (foundOptions && foundOptions.length > 0) {
         var groupedOptions = (0, _GroupOptions.default)(foundOptions);
