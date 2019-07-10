@@ -13,6 +13,8 @@ var _reactSvgSpinner = _interopRequireDefault(require("react-svg-spinner"));
 
 var _reactOnclickoutside = _interopRequireDefault(require("react-onclickoutside"));
 
+var _debounce = _interopRequireDefault(require("debounce"));
+
 var _Bem = _interopRequireDefault(require("./Bem"));
 
 var _FlattenOptions = _interopRequireDefault(require("./FlattenOptions"));
@@ -311,9 +313,8 @@ function (_React$PureComponent) {
           nextState.value = [];
           nextState.search = '';
         }
-      }
+      } //this.setState(nextState);
 
-      this.setState(nextState);
     }
   }, {
     key: "componentDidUpdate",
@@ -426,7 +427,7 @@ function (_React$PureComponent) {
   }, {
     key: "publishOptionSingle",
     value: function publishOptionSingle(value) {
-      return this.findByValue(null, value);
+      return this.findByValue(this.state.options, value);
     }
   }, {
     key: "publishOptionMultiple",
@@ -496,7 +497,7 @@ function (_React$PureComponent) {
 
         option = this.state.options[index];
       } else {
-        option = this.findByValue(this.state.defaultOptions, value);
+        option = this.findByValue(this.state.options, value);
       }
 
       if (this.props.multiple) {
@@ -510,17 +511,17 @@ function (_React$PureComponent) {
       } else {
         currentValue = option.value;
         search = option.name;
-      }
+      } // const options = this.state.defaultOptions;
 
-      var options = this.state.defaultOptions;
+
       var highlighted = this.props.multiple ? this.state.highlighted : null;
       this.setState({
         value: currentValue,
         search: search,
-        options: options,
         highlighted: highlighted,
         focus: this.props.multiple
       });
+      console.log(currentValue);
       setTimeout(function () {
         var publishOption = _this3.publishOption(currentValue);
 
@@ -799,7 +800,7 @@ function (_React$PureComponent) {
           className: this.classes.search,
           type: "search",
           value: this.state.search,
-          onChange: this.onChange,
+          onChange: (0, _debounce.default)(this.onChange, 500, false),
           placeholder: this.props.placeholder
         });
       } else {

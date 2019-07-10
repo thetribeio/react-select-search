@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Fuse from 'fuse.js';
 import Spinner from 'react-svg-spinner';
 import onClickOutside from 'react-onclickoutside';
+import debounce from 'debounce';
 import Bem from './Bem';
 import FlattenOptions from './FlattenOptions';
 import GroupOptions from './GroupOptions';
@@ -126,7 +127,7 @@ class SelectSearch extends React.PureComponent {
             }
         }
 
-        this.setState(nextState);
+        //this.setState(nextState);
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -321,7 +322,7 @@ class SelectSearch extends React.PureComponent {
     }
 
     publishOptionSingle(value) {
-        return this.findByValue(null, value);
+        return this.findByValue(this.state.options, value);
     }
 
     publishOptionMultiple(value) {
@@ -388,33 +389,31 @@ class SelectSearch extends React.PureComponent {
 
             option = this.state.options[index];
         } else {
-            option = this.findByValue(this.state.defaultOptions, value);
+            option = this.findByValue(this.state.options, value);
         }
 
         if (this.props.multiple) {
             if (!currentValue) {
                 currentValue = [];
             }
-            
             const currentIndex = currentValue.indexOf(option.value);
             currentIndex > -1 ? currentValue.splice(currentIndex, 1) : currentValue.push(option.value);
-
             search = '';
         } else {
             currentValue = option.value;
             search = option.name;
         }
 
-        const options = this.state.defaultOptions;
+        // const options = this.state.defaultOptions;
         const highlighted = (this.props.multiple) ? this.state.highlighted : null;
 
         this.setState({
             value: currentValue,
             search,
-            options,
             highlighted,
             focus: this.props.multiple,
         });
+        console.log(currentValue);
 
         setTimeout(() => {
             const publishOption = this.publishOption(currentValue);
@@ -644,7 +643,7 @@ class SelectSearch extends React.PureComponent {
         if (this.props.search) {
             const name = null;
 
-            searchField = <input name={name} ref={this.search} onFocus={this.onFocus} onKeyPress={this.onKeyPress} className={this.classes.search} type="search" value={this.state.search} onChange={this.onChange} placeholder={this.props.placeholder} />;
+            searchField = <input name={name} ref={this.search} onFocus={this.onFocus} onKeyPress={this.onKeyPress} className={this.classes.search} type="search" value={this.state.search} onChange={debounce(this.onChange, 500, false)} placeholder={this.props.placeholder} />;
         } else {
             if (this.props.multiple) {
                 return;
