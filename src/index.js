@@ -380,7 +380,7 @@ class SelectSearch extends React.PureComponent {
             search = option.name;
         }
 
-        // const options = this.state.defaultOptions;
+        const options = this.state.defaultOptions;
         const highlighted = (this.props.multiple) ? this.state.highlighted : null;
 
         this.setState({
